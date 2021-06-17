@@ -18,8 +18,10 @@
                 <!-- Player Ship Components -->
                 <find_object_component name="$BTGM_PlayerShip_Component_List" object="player.ship" class="class.destructible" multiple="true"/>
                 <do_for_each in="$BTGM_PlayerShip_Component_List" name="$BTGM_PlayerShip_Component">
-                    <restore_object object="$BTGM_PlayerShip_Component" hull="100" recursive="true" />
-                    <set_object_min_hull object="$BTGM_PlayerShip_Component" exact="100"/>
+                    <do_if value="$BTGM_PlayerShip_Component != null">
+                        <restore_object object="$BTGM_PlayerShip_Component" hull="100" recursive="true" />
+                        <set_object_min_hull object="$BTGM_PlayerShip_Component" exact="100"/>
+                    </do_if>
                 </do_for_each>
             </actions>
         </cue>
@@ -37,8 +39,10 @@
                     <!-- Ship Components -->
                     <find_object_component name="$BTGM_Ship_Component_List" object="$BTGM_Ship" class="class.destructible" multiple="true"/>
                     <do_for_each in="$BTGM_Ship_Component_List" name="$BTGM_Ship_Component">
-                        <restore_object object="$BTGM_Ship_Component" hull="100" recursive="true" />
-                        <set_object_min_hull object="$BTGM_Ship_Component" exact="100"/>
+                        <do_if value="$BTGM_Ship_Component != null">
+                            <restore_object object="$BTGM_Ship_Component" hull="100" recursive="true" />
+                            <set_object_min_hull object="$BTGM_Ship_Component" exact="100"/>
+                        </do_if>
                     </do_for_each>
                 </do_for_each>
 
@@ -52,8 +56,10 @@
                     <!-- Station Components -->
                     <find_object_component name="$BTGM_Station_Component_List" object="$BTGM_Station" class="class.destructible" multiple="true"/>
                     <do_for_each in="$BTGM_Station_Component_List" name="$BTGM_Station_Component">
-                        <restore_object object="$BTGM_Station_Component" hull="100" recursive="true" />
-                        <set_object_min_hull object="$BTGM_Station_Component" exact="100"/>
+                        <do_if value="$BTGM_Station_Component != null">
+                            <restore_object object="$BTGM_Station_Component" hull="100" recursive="true" />
+                            <set_object_min_hull object="$BTGM_Station_Component" exact="100"/>
+                        </do_if>
                     </do_for_each>
                 </do_for_each>
             </actions>
