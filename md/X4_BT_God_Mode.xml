@@ -2,67 +2,102 @@
 <mdscript name="X4_BT_God_Mode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
     <cues>
         <!-- Notify Player -->
-        <cue name="BTGM_Player_Notify" instantiate="false" checktime="player.age + 20000ms" namespace="this">
+        <cue name="BTGM_Player_Notify" instantiate="false" checktime="20s">
             <actions>
-                <show_notification text="'BaerTec Inc.' + '\n' + {1015,70}" sound="notification_warning" comment="Hack activated"/>
+                <show_help duration="15s" custom="{616678, 3}"/>
             </actions>
         </cue>
 
-        <!-- Make Player Primary Ship invincible -->
-        <cue name="BTGM_Player_Ship_Invincible" instantiate="true" checktime="player.age + 20000ms" checkinterval="20s" namespace="this">
+        <!-- Make Player Ships and Components invincible -->
+        <cue name="BTGM_Player_Owned_Invincible" instantiate="true" checktime="2min" checkinterval="3s">
             <actions>
-                <!-- Player Ship -->
-                <restore_object object="player.ship" hull="100" recursive="true" />
-                <set_object_min_hull object="player.ship" exact="100"/>
+                <set_value name="$BTGM_ObjectTypeName" exact="null"/>
 
-                <!-- Player Ship Components -->
-                <find_object_component name="$BTGM_PlayerShip_Component_List" object="player.ship" class="class.destructible" multiple="true"/>
-                <do_for_each in="$BTGM_PlayerShip_Component_List" name="$BTGM_PlayerShip_Component">
-                    <do_if value="$BTGM_PlayerShip_Component != null">
-                        <restore_object object="$BTGM_PlayerShip_Component" hull="100" recursive="true" />
-                        <set_object_min_hull object="$BTGM_PlayerShip_Component" exact="100"/>
+                <!-- Player Ship Station -->
+                <find_ship name="$BTGM_Ship_List" class="[class.ship_xs, class.ship_s, class.ship_m, class.ship_l, class.ship_xl]" owner="faction.player" space="player.galaxy" multiple="true" />
+                <do_for_each in="$BTGM_Ship_List" name="$BTGM_Object">
+                    <!-- Player Ship -->
+                    <set_value name="$BTGM_ObjectTypeName" exact="{616678, 5}"/>
+                    <include_actions ref="BTGM_Repair_And_Invincible" comment="Input: $BTGM_Object, $BTGM_ObjectTypeName Output: None"/>
+                </do_for_each>
+
+                <!-- Player Station List -->
+                <find_station name="$BTGM_Station_List" owner="faction.player" space="player.galaxy" multiple="true" />
+                <do_for_each in="$BTGM_Station_List" name="$BTGM_Object">
+                    <!-- Player Station -->
+                    <set_value name="$BTGM_ObjectTypeName" exact="{616678, 6}"/>
+                    <include_actions ref="BTGM_Repair_And_Invincible" comment="Input: $BTGM_Object, $BTGM_ObjectTypeName Output: None"/>
+                </do_for_each>
+
+                <remove_value name="$BTGM_ObjectTypeName"/>
+            </actions>
+        </cue>
+
+        <!-- Required: $BTGM_Object, $BTGM_ObjectTypeName Output: None -->
+        <library name="BTGM_Repair_And_Invincible" comment="Input: $BTGM_Object, $BTGM_ObjectTypeName Output: None">
+            <actions>
+                <set_value name="$BTGM_Repaired" exact="false"/>
+                <set_value name="$BTGM_Invincible" exact="false"/>
+
+                <do_if value="$BTGM_Object != null and $BTGM_Object.isclass.destructible and $BTGM_Object.maxhull gt 0">
+                    <!-- If Object is damaged repair it -->
+                    <do_if value="$BTGM_Object.hullpercentage lt 100">
+                        <restore_object object="$BTGM_Object" hull="100" recursive="true" />
+                        <set_value name="$BTGM_Repaired" exact="true"/>
+                    </do_if>
+
+                    <!-- If Object is not invincible make it invincible -->
+                    <do_if value="not $BTGM_Object.isindestructible">
+                        <set_object_min_hull object="$BTGM_Object" exact="100"/>
+                        <set_value name="$BTGM_Invincible" exact="true"/>
+                    </do_if>
+                </do_if>
+
+                <!-- Check Object Components -->
+                <find_object_component name="$BTGM_Component_List" object="$BTGM_Object" class="class.destructible" multiple="true"/>
+                <do_for_each in="$BTGM_Component_List" name="$BTGM_Component">
+                    <do_if value="$BTGM_Component != null and $BTGM_Component.isclass.destructible and $BTGM_Component.maxhull gt 0">
+                        <do_if value="$BTGM_Component.hullpercentage lt 100">
+                            <restore_object object="$BTGM_Component" hull="100" recursive="true" />
+                            <set_value name="$BTGM_Repaired" exact="true"/>
+                        </do_if>
+
+                        <do_if value="not $BTGM_Component.isindestructible">
+                            <set_object_min_hull object="$BTGM_Component" exact="100"/>
+                            <set_value name="$BTGM_Invincible" exact="true"/>
+                        </do_if>
                     </do_if>
                 </do_for_each>
+
+                <!-- Build Message -->
+                <set_value name="$BTGM_Message" exact="null"/>
+                <do_if value="$BTGM_Repaired and $BTGM_Invincible">
+                    <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 7}.[$BTGM_Object.name, $BTGM_Object.idcode] + '\n' +
+                                                           $BTGM_ObjectTypeName + ' ' + {616678, 8}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
+                </do_if>
+                <do_else>
+                    <do_if value="$BTGM_Repaired">
+                        <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 7}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
+                    </do_if>
+
+                    <do_if value="$BTGM_Invincible">
+                        <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 8}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
+                    </do_if>
+                </do_else>
+
+                <!-- Show Message -->>
+                <do_if value="$BTGM_Message != null">
+                    <set_value name="$BTGM_Title" exact="{616678, 2}"/>
+                    <show_notification text="$BTGM_Title + '\n' + $BTGM_Message" sound="notification_warning"/>
+                    <write_to_logbook category="general" title="$BTGM_Title" text="$BTGM_Message"/>
+                    <remove_value name="$BTGM_Title"/>
+                </do_if>
+
+                <!-- Remove Variables -->
+                <remove_value name="$BTGM_Repaired"/>
+                <remove_value name="$BTGM_Invincible"/>
+                <remove_value name="$BTGM_Message"/>
             </actions>
-        </cue>
-
-        <!-- Make Player Ships, Stations and Components invincible -->
-        <cue name="BTGM_Player_Owned_Invincible" instantiate="true" checktime="player.age + 20000ms" checkinterval="20s" namespace="this">
-            <actions>
-                <!-- Player Ships -->
-                <find_ship name="$BTGM_Ship_List" class="[class.ship_xs, class.ship_s, class.ship_m, class.ship_l, class.ship_xl]" owner="faction.player" space="player.galaxy" multiple="true" />
-                <do_for_each in="$BTGM_Ship_List" name="$BTGM_Ship">
-                    <!-- Ship -->
-                    <restore_object object="$BTGM_Ship" hull="100" recursive="true" />
-                    <set_object_min_hull object="$BTGM_Ship" exact="100"/>
-
-                    <!-- Ship Components -->
-                    <find_object_component name="$BTGM_Ship_Component_List" object="$BTGM_Ship" class="class.destructible" multiple="true"/>
-                    <do_for_each in="$BTGM_Ship_Component_List" name="$BTGM_Ship_Component">
-                        <do_if value="$BTGM_Ship_Component != null">
-                            <restore_object object="$BTGM_Ship_Component" hull="100" recursive="true" />
-                            <set_object_min_hull object="$BTGM_Ship_Component" exact="100"/>
-                        </do_if>
-                    </do_for_each>
-                </do_for_each>
-
-                <!-- Player Stations -->
-                <find_station name="$BTGM_Station_List" owner="faction.player" space="player.galaxy" multiple="true" />
-                <do_for_each in="$BTGM_Station_List" name="$BTGM_Station">
-                    <!-- Station -->
-                    <restore_object object="$BTGM_Station" hull="100" recursive="true" />
-                    <set_object_min_hull object="$BTGM_Station" exact="100"/>
-
-                    <!-- Station Components -->
-                    <find_object_component name="$BTGM_Station_Component_List" object="$BTGM_Station" class="class.destructible" multiple="true"/>
-                    <do_for_each in="$BTGM_Station_Component_List" name="$BTGM_Station_Component">
-                        <do_if value="$BTGM_Station_Component != null">
-                            <restore_object object="$BTGM_Station_Component" hull="100" recursive="true" />
-                            <set_object_min_hull object="$BTGM_Station_Component" exact="100"/>
-                        </do_if>
-                    </do_for_each>
-                </do_for_each>
-            </actions>
-        </cue>
+        </library>
     </cues>
 </mdscript>

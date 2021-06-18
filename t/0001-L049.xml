@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<language>
+    <page id="616678" voice="no">
+        <t id="1">BaerTec Inc.</t>
+        <t id="2">{616678, 1} Dienst</t>
+        <t id="3">{616678, 2} installiert</t>
+        <t id="4">Spieler Schiff</t>
+        <t id="5">Schiff</t>
+        <t id="6">Station</t>
+        <t id="7">%1 \(%2\) wurde repariert</t>
+        <t id="8">%1 \(%2\) ist nun unzerstörbar</t>
+    </page>
+</language>
