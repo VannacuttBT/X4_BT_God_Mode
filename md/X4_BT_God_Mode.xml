@@ -35,6 +35,10 @@
 
         <!-- Required: $BTGM_Object, $BTGM_ObjectTypeName Output: None -->
         <library name="BTGM_Repair_And_Invincible" comment="Input: $BTGM_Object, $BTGM_ObjectTypeName Output: None">
+            <params>
+                <param name="BTGM_Object"/>
+                <param name="BTGM_ObjectTypeName"/>
+            </params>
             <actions>
                 <set_value name="$BTGM_Repaired" exact="false"/>
                 <set_value name="$BTGM_Invincible" exact="false"/>
