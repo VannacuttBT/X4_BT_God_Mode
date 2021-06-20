@@ -2,7 +2,21 @@
 <mdscript name="X4_BT_God_Mode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
     <cues>
         <!-- Notify Player -->
-        <cue name="BTGM_Player_Notify" instantiate="false" checktime="20s">
+        <cue name="BTGM_Player_Notify_Installed_Start" instantiate="true">
+            <conditions>
+                <event_game_started/>
+            </conditions>
+            <delay exact="20s"/>
+            <actions>
+                <show_help duration="15s" custom="{616678, 3}"/>
+            </actions>
+        </cue>
+
+        <cue name="BTGM_Player_Notify_Installed_Load" instantiate="true">
+            <conditions>
+                <event_game_loaded/>
+            </conditions>
+            <delay exact="20s"/>
             <actions>
                 <show_help duration="15s" custom="{616678, 3}"/>
             </actions>
