@@ -9,7 +9,7 @@
         </cue>
 
         <!-- Make Player Ships and Components invincible -->
-        <cue name="BTGM_Player_Owned_Invincible" instantiate="true" checktime="2min" checkinterval="30s">
+        <cue name="BTGM_Player_Owned_Invincible" instantiate="true" checktime="player.age + 20s" checkinterval="30s">
             <actions>
                 <set_value name="$BTGM_ObjectTypeName" exact="null"/>
 
