@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <language>
     <page id="616678" voice="no">
-        <t id="1">BaerTec Inc.</t>
+        <t id="1">BaerTec</t>
         <t id="2">{616678, 1} Service</t>
         <t id="3">{616678, 2} installed</t>
         <t id="4">Player Ship</t>
