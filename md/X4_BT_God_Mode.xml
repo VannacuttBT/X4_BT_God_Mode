@@ -89,19 +89,22 @@
 
                 <!-- Build Message -->
                 <set_value name="$BTGM_Message" exact="null"/>
-                <do_if value="$BTGM_Repaired and $BTGM_Invincible">
-                    <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 7}.[$BTGM_Object.name, $BTGM_Object.idcode] + '\n' +
-                                                           $BTGM_ObjectTypeName + ' ' + {616678, 8}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
-                </do_if>
-                <do_else>
-                    <do_if value="$BTGM_Repaired">
-                        <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 7}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
+                <!-- Only build message when ship is not xs size because of possible message spam -->
+                <do_if value="not $BTGM_Object.isclass.ship_xs">
+                    <do_if value="$BTGM_Repaired and $BTGM_Invincible">
+                        <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 7}.[$BTGM_Object.name, $BTGM_Object.idcode] + '\n' +
+                                                            $BTGM_ObjectTypeName + ' ' + {616678, 8}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
                     </do_if>
+                    <do_else>
+                        <do_if value="$BTGM_Repaired">
+                            <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 7}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
+                        </do_if>
 
-                    <do_if value="$BTGM_Invincible">
-                        <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 8}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
-                    </do_if>
-                </do_else>
+                        <do_if value="$BTGM_Invincible">
+                            <set_value name="$BTGM_Message" exact="$BTGM_ObjectTypeName + ' ' + {616678, 8}.[$BTGM_Object.name, $BTGM_Object.idcode]"/>
+                        </do_if>
+                    </do_else>
+                </do_if>
 
                 <!-- Show Message -->>
                 <do_if value="$BTGM_Message != null">
